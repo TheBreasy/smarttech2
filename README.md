@@ -1,1 +1,1 @@
-# smarttech2
+# Smart Tech 2 project frontend
