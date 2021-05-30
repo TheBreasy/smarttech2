@@ -6,6 +6,6 @@ const SETTINGS = [
         "user" => "root",
         "password" => "root",
         "host" => "localhost",
-        "port" => "8889"
+        "port" => "3307"
     ]
 ];

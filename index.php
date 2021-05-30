@@ -4,6 +4,27 @@ include_once(__DIR__ . '/includes/Db.php');
 include_once (__DIR__ . '/includes/nav.php');
 include_once(__DIR__ . "/includes/checkSession.php");
 
+
+    $page = $_SERVER['PHP_SELF'];
+    $sec = "5";
+    header("Refresh: $sec; url=$page");
+
+
+    $conn = Db::getConnection();
+    $statement = $conn->prepare('SELECT * FROM dht11 ORDER BY date desc LIMIT 1'); //haal de laatst gemeten temperatuur en vochtigheid op
+    $statement->execute();
+    $result = $statement->fetchAll();
+    $currTemp = $result[0]['temperature'];
+    $currHumidity = $result[0]['humidity'];
+
+    $statement = $conn->prepare('SELECT * FROM users_settings ORDER BY date desc LIMIT 1'); //haal de user settings op
+    $statement->execute();
+    $result = $statement->fetchAll();
+    $minTemp = $result[0]['min_temperature'];
+    $maxTemp = $result[0]['max_temperature'];
+    $minHumidity = $result[0]['min_humidity'];
+    $maxHumidity = $result[0]['max_humidity'];
+
 ?>
 <!doctype html>
 <html lang="en">
@@ -26,14 +47,19 @@ include_once(__DIR__ . "/includes/checkSession.php");
     <div class="card text-dark bg-light mb-3 text-center" style="max-width: 18rem;">
         <div class="card-header">Temperature</div>
         <div class="card-body">
-            <h5 class="card-title">23°C</h5>
+<!--            Wanneer de huidige temperatuur hoger is dan de max-temperatuur setting, wordt de tekst rood en wanneer het lager is dan de min-temperatuur setting, wordt het cyan.-->
+<!--            Indien het binnen de settings waarden bevindt, is de tekst gewoon zwart.-->
+            <h5 class="card-title" style="<?php echo $currTemp>$maxTemp ? "color: red" : ($currTemp<$minTemp? "color: cyan":"color: black")?>"><?php echo $currTemp;?>°C</h5>
         </div>
     </div>
 
     <div class="card text-dark bg-light mb-3 text-center" style="max-width: 18rem;">
         <div class="card-header">Humidity</div>
         <div class="card-body">
-            <h5 class="card-title">40%</h5>
+
+<!--            Wanneer de huidige vochtigheid hoger is dan de max-vochtigheid setting, wordt de tekst blauw en wanneer het lager is dan de min-vochtigheid setting, wordt het oranje.-->
+<!--            Indien het binnen de settings waarden bevindt, is de tekst gewoon zwart.-->
+            <h5 class="card-title" style="<?php echo $currHumidity>$maxHumidity ? "color: blue" : ($currHumidity<$minHumidity? "color: orange":"color: black")?>"><?php echo $currHumidity;?>%</h5>
         </div>
     </div>
 

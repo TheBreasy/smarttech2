@@ -4,10 +4,15 @@ include_once(__DIR__ . '/includes/Db.php');
 include_once (__DIR__ . '/includes/nav.php');
 include_once(__DIR__ . "/includes/checkSession.php");
 
-//    $conn = Db::getConnection();
-//    $statement = $conn->prepare('SELECT * FROM users_settings ORDER BY timestamp desc LIMIT 1');
-//    $statement->execute();
-//    $result = $statement->fetchAll();
+    $conn = Db::getConnection();
+    $statement = $conn->prepare('SELECT * FROM users_settings ORDER BY date desc LIMIT 1');
+    $statement->execute();
+    $result = $statement->fetchAll();
+    $minHumidity = $result[0]['min_humidity'];
+    $maxHumidity = $result[0]['max_humidity'];
+    $minTemperature = $result[0]['min_temperature'];
+    $maxTemperature = $result[0]['max_temperature'];
+
 
     if(!empty($_POST)) {
             $minHumidity = $_POST['minHum'];
@@ -43,19 +48,19 @@ include_once(__DIR__ . "/includes/checkSession.php");
     <form method="post">
         <div class="mb-3">
             <label for="minTemp" class="form-label">Set minimum temperature</label>
-            <input type="text" class="form-control" id="minTemp" name="minTemp">
+            <input type="text" class="form-control" id="minTemp" name="minTemp" value="<?php echo $minTemperature?>">
         </div>
         <div class="mb-3">
             <label for="maxTemp" class="form-label">Set maximum temperature</label>
-            <input type="text" class="form-control" id="maxTemp" name="maxTemp">
+            <input type="text" class="form-control" id="maxTemp" name="maxTemp" value="<?php echo $maxTemperature?>">
         </div>
         <div class="mb-3">
             <label for="minHum" class="form-label">Set minimum humidity</label>
-            <input type="text" class="form-control" id="minHum" name="minHum">
+            <input type="text" class="form-control" id="minHum" name="minHum" value="<?php echo $minHumidity?>">
         </div>
         <div class="mb-3">
             <label for="maxHum" class="form-label">Set maximum humidity</label>
-            <input type="text" class="form-control" id="maxHum" name="maxHum">
+            <input type="text" class="form-control" id="maxHum" name="maxHum" value="<?php echo $maxHumidity?>">
         </div>
         <button type="submit" class="btn btn-primary">Submit</button>
     </form>
